@@ -1,6 +1,8 @@
-from locust import HttpUser, task
+from locust import HttpUser, task, between
 
 class LoadTest(HttpUser):
+    wait_time = between(0.001, 0.002)  # Minimal wait time for high throughput
+
     @task
     def post_data(self):
         data = [
