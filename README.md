@@ -4,16 +4,12 @@
 
 This project implements a microservices-based architecture for stream processing using Kafka and Spark. It provides endpoints for real-time data processing, analysis, and transformation. The microservices are containerized using Docker and deployed using Kubernetes, with support for distributed data pipelines.
 
----
-
 ## Features
 - Real-time stream processing using Apache Spark and Kafka.
 - Comprehensive logging for monitoring and debugging.
 - Containerized microservices for portability and scalability.
 - Load testing using Locust to ensure reliability and stability.
 - Quantitative assessment of system performance (latency, throughput).
-
----
 
 ## Requirements
 1. Install **Docker** and **Kubernetes**:
@@ -25,8 +21,6 @@ This project implements a microservices-based architecture for stream processing
    ```bash
    pip install locust
    ```
-
----
 
 ## Setting up the Kubernetes Cluster
 1. Start Minikube:
@@ -43,9 +37,7 @@ This project implements a microservices-based architecture for stream processing
    ```bash
    kubectl get all
    ```
-
----
-
+   
 ## Running the Microservices
 1. Build the Docker image:
    ```bash
@@ -62,8 +54,6 @@ This project implements a microservices-based architecture for stream processing
         -d '[{"id": 1, "gender": "M", "salary": 5000}, {"id": 2, "gender": "F", "salary": 6000}]'
    ```
 
----
-
 ## Load Testing
 1. Run the load test using Locust:
    ```bash
@@ -78,8 +68,6 @@ This project implements a microservices-based architecture for stream processing
    Median Latency: 6400ms
    Percentiles (95th): 11000ms
    ```
-
----
 
 ## Quantitative Assessment
 The system was tested with 100 concurrent users and a ramp-up rate of 10 users per second. Below are the key metrics from the load tests:
@@ -99,22 +87,16 @@ The system was tested with 100 concurrent users and a ramp-up rate of 10 users p
 - No failures were recorded, indicating good reliability.
 - Optimization opportunities exist to reduce peak latencies (e.g., refactoring Spark jobs or optimizing Kafka configurations).
 
----
-
 ## Limitations
 1. **Latency**: Average latency increases with high concurrency, especially for complex Spark jobs.
 2. **Scalability**: Currently limited to a single-node Kafka and Spark setup.
 3. **Monitoring**: Requires integration with tools like Prometheus or Grafana for better performance visualization.
-
----
 
 ## Potential Areas for Improvement
 1. **Scaling**: Move to a multi-node cluster to improve scalability and reduce bottlenecks.
 2. **Caching**: Use distributed caching (e.g., Redis) to speed up frequently accessed computations.
 3. **Advanced Metrics**: Collect more detailed performance metrics using monitoring tools.
 4. **CI/CD**: Extend the GitHub Actions pipeline to include integration tests and deployment to Kubernetes.
-
----
 
 ## AI Pair Programming Tools Used
 1. **GitHub Copilot**:
@@ -123,8 +105,6 @@ The system was tested with 100 concurrent users and a ramp-up rate of 10 users p
 2. **TabNine**:
    - Provided code completions for Flask APIs and Spark transformations.
    - Enhanced the quality of SQL-like Spark operations.
-
----
 
 ## Directory Structure
 ```
