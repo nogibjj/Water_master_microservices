@@ -1,7 +1,7 @@
 import logging
 from flask import Flask, request, jsonify
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, avg, count
+from pyspark.sql.functions import avg, count
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -16,23 +16,21 @@ spark.sparkContext.setLogLevel("WARN")
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.StreamHandler()  # Log to console
-    ]
+    handlers=[logging.StreamHandler()]
 )
 logger = logging.getLogger(__name__)
 
 @app.route("/process", methods=["POST"])
 def process_data():
     """
-    Receive JSON data stream and return analysis results
+    Receive JSON data stream and return analysis results.
     """
     try:
         logger.info("Received request to /process")
         data = request.get_json()
         logger.info(f"Request data: {data}")
 
-        # Create temporary DataFrame
+        # Create Spark DataFrame
         df = spark.createDataFrame(data)
 
         # Perform simple data analysis
@@ -50,6 +48,6 @@ def process_data():
         logger.error(f"Error during processing: {str(e)}", exc_info=True)
         return jsonify({"error": str(e)}), 500
 
-if __name__ == "__main__":
-    logger.info("Starting Flask app on port 5000")
-    app.run(host="0.0.0.0", port=5000)
+# Entry point for Gunicorn
+if __name__ != "__main__":
+    logger.info("Gunicorn worker starting")
