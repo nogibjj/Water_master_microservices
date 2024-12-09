@@ -12,7 +12,6 @@
     - <a href="https://github.com/bitnami/charts/tree/main/bitnami/spark"> Spark</a> 
 
 - After everything is set up use `kubectl get all` to see all the things that are running on your kubernetes cluster.
-- It should look like this:
 
 - After Kafka and Spark are successfully installed you're now good to go.
 
