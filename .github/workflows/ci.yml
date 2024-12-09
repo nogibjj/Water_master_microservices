@@ -26,6 +26,12 @@ jobs:
         pip install -r requirements.txt
         pip install locust
 
-    - name: Run tests
+    - name: Start Flask service
+      run: |
+        nohup python src/app.py &
+      env:
+        FLASK_ENV: development
+
+    - name: Run load tests
       run: |
         locust -f src/load_test.py --headless -u 100 -r 10 --run-time 1m --host http://localhost:5000
