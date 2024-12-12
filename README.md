@@ -1,53 +1,71 @@
+[![CI Pipeline](https://github.com/nogibjj/Water_master_microservices/actions/workflows/ci.yml/badge.svg)](https://github.com/nogibjj/Water_master_microservices/actions/workflows/ci.yml)
 # Microservices for Kafka and Spark Stream Processing
 
 ## Overview
 
-This project implements a microservices-based architecture for stream processing using Kafka and Spark. It provides endpoints for real-time data processing, analysis, and transformation. The microservices are containerized using Docker and deployed using Kubernetes, with support for distributed data pipelines.
+This project implements a comprehensive microservices-based architecture for stream processing using Apache Kafka and Apache Spark. The microservice processes JSON-based data streams in real-time, enabling analysis and transformations, such as salary aggregation and gender distribution analysis. Key highlights of the project include containerization with Docker, deployment with Kubernetes, integration of Serverless Framework for Infrastructure as Code (IaC), and a robust CI/CD pipeline to ensure code quality and automated testing.
+
+The main functionalities of the project are:
+- Real-time ingestion and transformation of JSON data using Kafka and Spark.
+- Statistical analysis of data streams, such as calculating average salaries and counting records by gender or birth month.
+- Flask-based RESTful API that interacts with the Spark data pipeline.
+- Performance benchmarking with Locust to evaluate scalability and reliability.
+
+The microservices are optimized for portability, scalability, and monitoring, with emphasis on distributed data pipelines for high-throughput applications.
 
 ## Features
-- Real-time stream processing using Apache Spark and Kafka.
-- Comprehensive logging for monitoring and debugging.
-- Containerized microservices for portability and scalability.
-- Load testing using Locust to ensure reliability and stability.
-- Quantitative assessment of system performance (latency, throughput).
+
+- **Real-time Data Stream Processing**: Uses Apache Spark and Kafka to process and analyze large-scale streaming data.
+- **Microservices Architecture**: Developed with Flask for seamless interaction with data pipelines.
+- **Containerization**: Dockerized microservices ensure portability and environment consistency.
+- **Infrastructure as Code**: Utilizes Serverless Framework for cloud resource provisioning and management.
+- **Load Testing**: Comprehensive performance benchmarking with Locust.
+- **Continuous Integration/Continuous Delivery**: Automated CI/CD pipeline ensures deployment reliability.
 
 ## Requirements
-1. Install **Docker** and **Kubernetes**:
-   - Follow the official [Docker installation guide](https://docs.docker.com/get-docker/) and [Kubernetes installation guide](https://kubernetes.io/docs/tasks/tools/).
-2. Install **Helm** to deploy Kafka and Spark:
+
+1. **Install Docker**:
+   - Follow the [Docker installation guide](https://docs.docker.com/get-docker/).
+2. **Install Kubernetes**:
+   - Follow the [Kubernetes installation guide](https://kubernetes.io/docs/tasks/tools/).
+3. **Install Helm**:
    - Kafka: [Bitnami Kafka Chart](https://github.com/bitnami/charts/tree/main/bitnami/kafka)
    - Spark: [Bitnami Spark Chart](https://github.com/bitnami/charts/tree/main/bitnami/spark)
-3. Install **Locust** for load testing:
+4. **Install Locust for Load Testing**:
    ```bash
    pip install locust
    ```
 
-## Setting up the Kubernetes Cluster
-1. Start Minikube:
+## How to Run
+
+### Setting up the Kubernetes Cluster
+
+1. **Start Minikube**:
    ```bash
    minikube start
    ```
-2. Deploy Kafka and Spark using Helm:
+2. **Deploy Kafka and Spark using Helm**:
    ```bash
    helm repo add bitnami https://charts.bitnami.com/bitnami
    helm install kafka bitnami/kafka
    helm install spark bitnami/spark
    ```
-3. Verify deployment:
+3. **Verify Deployment**:
    ```bash
    kubectl get all
    ```
-   
-## Running the Microservices
-1. Build the Docker image:
+
+### Running the Microservices
+
+1. **Build the Docker Image**:
    ```bash
    docker build -t microservice .
    ```
-2. Run the container:
+2. **Run the Docker Container**:
    ```bash
    docker run -p 5000:5000 microservice
    ```
-3. Test the `/process` endpoint:
+3. **Test the Flask API**:
    ```bash
    curl -X POST http://localhost:5000/process \
         -H "Content-Type: application/json" \
@@ -55,58 +73,85 @@ This project implements a microservices-based architecture for stream processing
    ```
 
 ## Load Testing
-1. Run the load test using Locust:
-   ```bash
-   locust -f src/load_test.py --headless -u 100 -r 10 --run-time 1m --host http://localhost:5000
-   ```
-2. Sample results (excerpt):
-   ```
-   Requests: 727
-   Avg Latency: 7121ms
-   Min Latency: 4906ms
-   Max Latency: 15603ms
-   Median Latency: 6400ms
-   Percentiles (95th): 11000ms
-   ```
+
+### Performance Observations
+
+**Test Details:**
+- Users: 100 concurrent users.
+- Ramp-up Rate: 10 users per second.
+- Test Duration: 1 minute.
+
+**Results:**
+- Total Requests: 634
+- Average Latency: 8091ms
+- Minimum Latency: 4912ms
+- Maximum Latency: 16845ms
+- Median Latency: 7600ms
+
+**Key Issues Identified:**
+1. **High Latency**: The average latency remains above 8000ms, with some requests exceeding 16000ms.
+2. **Limited Throughput**: The system failed to achieve the target of 10,000 requests per second. The peak throughput was approximately 15.6 requests/second.
+
+**Potential Bottlenecks:**
+- Spark Job Overhead: Processing large JSON objects in Spark introduces additional latency.
+- Kafka Configuration: Suboptimal broker settings may limit message throughput.
+- Flask API: Single-threaded Flask may not handle high concurrency effectively.
+
+**Future Improvements:**
+- Optimize Spark jobs by caching intermediate results or partitioning data more effectively.
+- Improve Kafka broker configurations (e.g., increase replication factor and partitions).
+- Replace Flask with a more scalable framework like FastAPI or deploy Flask with Gunicorn.
+- Implement distributed caching (e.g., Redis) to reduce repeated computations.
+
+## Infrastructure as Code (IaC)
+
+This project utilizes the **Serverless Framework** for managing cloud infrastructure resources. The framework simplifies the provisioning of services like Kafka topics and AWS Lambda functions, ensuring consistent deployments.
 
 ## Quantitative Assessment
-The system was tested with 100 concurrent users and a ramp-up rate of 10 users per second. Below are the key metrics from the load tests:
 
 | Metric              | Value                |
 |---------------------|----------------------|
-| Total Requests      | 727                 |
-| Average Latency     | 7121ms              |
-| Minimum Latency     | 4906ms              |
-| Maximum Latency     | 15603ms             |
-| Median Latency      | 6400ms              |
-| 95th Percentile     | 11000ms             |
+| Total Requests      | 634                 |
+| Average Latency     | 8091ms              |
+| Minimum Latency     | 4912ms              |
+| Maximum Latency     | 16845ms             |
+| Median Latency      | 7600ms              |
 | Error Rate          | 0% (0 failures)     |
 
-### Observations
-- The average latency increased with the number of concurrent requests but remained under acceptable limits for most cases.
-- No failures were recorded, indicating good reliability.
-- Optimization opportunities exist to reduce peak latencies (e.g., refactoring Spark jobs or optimizing Kafka configurations).
+## Architectural Diagram
 
-## Limitations
-1. **Latency**: Average latency increases with high concurrency, especially for complex Spark jobs.
-2. **Scalability**: Currently limited to a single-node Kafka and Spark setup.
-3. **Monitoring**: Requires integration with tools like Prometheus or Grafana for better performance visualization.
+*Insert diagram here.*
 
-## Potential Areas for Improvement
-1. **Scaling**: Move to a multi-node cluster to improve scalability and reduce bottlenecks.
-2. **Caching**: Use distributed caching (e.g., Redis) to speed up frequently accessed computations.
-3. **Advanced Metrics**: Collect more detailed performance metrics using monitoring tools.
-4. **CI/CD**: Extend the GitHub Actions pipeline to include integration tests and deployment to Kubernetes.
+## Demo Video
+
+[Click here to view the demo video.](#)
 
 ## AI Pair Programming Tools Used
+
 1. **GitHub Copilot**:
-   - Assisted in generating initial code for Kafka-Spark integration.
-   - Suggested efficient ways to group and aggregate data streams.
+   - Suggested efficient ways to integrate Spark and Kafka.
+   - Streamlined the development of RESTful API endpoints.
 2. **TabNine**:
-   - Provided code completions for Flask APIs and Spark transformations.
-   - Enhanced the quality of SQL-like Spark operations.
+   - Provided intelligent autocompletions for Spark transformations and Flask code.
+   - Enhanced the quality of code structure and SQL-like operations.
+
+## Project Features vs. Rubric Mapping
+
+| Feature/Code Component          | Rubric Requirement                          |
+|---------------------------------|---------------------------------------------|
+| Flask API (src/app.py)          | Microservice Implementation                |
+| Dockerfile                      | Containerization with Distroless           |
+| Logging (src/app.py)            | Use of Logging                              |
+| Locust Load Testing             | Successful Load Test                        |
+| Spark Scripts (e.g., count_gender.py) | Data Engineering                         |
+| Serverless Framework            | Infrastructure as Code                     |
+| GitHub Actions Workflow (.github/workflows/ci.yml) | CI/CD Setup                        |
+| README.md                       | Comprehensive Documentation                |
+| Architectural Diagram           | Clear Architecture Representation          |
+| .devcontainer Config            | GitHub/GitLab Configurations               |
 
 ## Directory Structure
+
 ```
 project-root/
 │
@@ -133,4 +178,5 @@ project-root/
 │
 ├── requirements.txt           # Python dependencies
 ├── README.md                  # Project documentation
+├── Commands.md                # Commands documentation
 ```
