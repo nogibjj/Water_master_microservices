@@ -124,7 +124,7 @@ This project utilizes the **Serverless Framework** for managing cloud infrastruc
 
 ## Demo Video
 
-[Click here to view the demo video.](#)
+[Click here to view the demo video.](https://youtu.be/x2pgzh_cPSs)
 
 ## AI Pair Programming Tools Used
 
