@@ -120,7 +120,7 @@ This project utilizes the **Serverless Framework** for managing cloud infrastruc
 
 ## Architectural Diagram
 
-*Insert diagram here.*
+![](diagram.png)
 
 ## Demo Video
 
