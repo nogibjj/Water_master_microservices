@@ -1,3 +1,4 @@
+[![CI Pipeline](https://github.com/nogibjj/Water_master_microservices/actions/workflows/ci.yml/badge.svg)](https://github.com/nogibjj/Water_master_microservices/actions/workflows/ci.yml)
 # Microservices for Kafka and Spark Stream Processing
 
 ## Overview
